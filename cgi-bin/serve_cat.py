@@ -4,14 +4,15 @@
 from utils import db_connect
 
 from bson.objectid import ObjectId
-import utils
-#import cgi
-#import cgitb
-#cgitb.enable()
+from datetime import datetime
+import utils 
+import cgi
+import cgitb
+cgitb.enable()
 
-#form = cgi.FieldStorage()
-db = utils.db_connect()
 
+#db = utils.db_connect()
+db = db_connect()
 
 
 
@@ -27,7 +28,7 @@ print("""!<DOCTYPE html>
 <body>
 <h1>Welcome to Catman</h1>""")
 
-
+form = cgi.FieldStorage()
 
 result = db.images.aggregate(
 	[{'$sample': { 'size' : 1} } ]
@@ -55,8 +56,25 @@ else:
 	print("<p> Oops. Something went wrong!</p>")
 
 print("""<form method = "POST" action="/cgi-bin/serve_cat.py"
-	<input type = "hidden" value{} name "img_id">
-	<input type = "submit" name "btn_skip" value="Skip">
-	<input type = "submit" name "btn_fluck" value="Fluck" """)
+	<input type = "hidden" value="{}" name = "img_id">
+	<input type = "submit" name= "btn_skip" value="Skip">
+	<input type = "submit" name = "btn_fluck" value="Fluck">
+	</form> """.format(img_id) )
+
+if 'btn_fluck' in form:
+	result = db.flucks.insert({
+#		"image_id":ObjectId(form['img_id'].value),
+		"is_flucked":1,
+		"timestamp":datetime.now().timestamp()
+	})
+elif 'btn_skip' in form:
+	result = db.flucks.insert({
+#		"image_id":ObjectId(form['img_id'].value),
+		"is_flucked":0,
+		"timestamp":datetime.now().timestamp()
+
+})
+
+
 
 print("</body></html>")
