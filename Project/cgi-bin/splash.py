@@ -52,7 +52,7 @@ elif 'btn_skip' in sent_data:
 # ------ GET LATEST FLUCKED CAT -------
 
 # call latest_fluck to get image details
-image = components.latest_fluck(db)
+image = components.latest_fluck( db )
 # check image isn't empty before proceeding...
 if image:
 	# it isn't so render the template
